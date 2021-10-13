@@ -37,6 +37,46 @@ namespace InspectionAI.Home
             _assemblyDefectsRepo = assemblyDefectsRepo;
         }
 
+        public void FillData(int step, int perDayCount, DateTime from, DateTime to)
+        {
+            var assemData =  _assemblyLineRepo.GetAllList();
+            var stageDefects = _stageDefectsRepo.GetAllList();
+            for (DateTime d = from; d <= to; d = d.AddDays(1))
+            {
+                for (int i = 0; i < perDayCount; i++)
+                {
+                    Random rnd = new Random();
+                    var assem = assemData.ElementAt(rnd.Next(assemData.Count));
+                    var productId = assem.ProductId;
+                    var stageId = assem.StageId;
+                    var assemId = assem.Id;
+                    var defectsIds = stageDefects.Where(x => x.ProductId == productId && x.StageId == stageId).Select(x => x.DefectId).ToList();
+                    var dCount = rnd.Next(10) % 2;
+                    AssemblyDetection.AssemblyDetection detection = new()
+                    {
+                        StageId = stageId,
+                        ProductId = productId,
+                        AssemblyLineId = assemId,
+                        DetectionTime = d,
+                        DefectsCount = dCount
+                    };
+                    var detectionId = _assemblyDetectionRepo.InsertAndGetId(detection);
+                    for( int j = 0; j < dCount; j++)
+                    {
+                        AssemblyDefects.AssemblyDefects assemblyDefect = new()
+                        {
+                            AssemblyDetectionId = detectionId,
+                            Confidence = 9,
+                            DefectId = defectsIds.ElementAt(rnd.Next(defectsIds.Count)),
+                            DetectionTime = d,
+                            StageId = stageId
+                        };
+                        _assemblyDefectsRepo.Insert(assemblyDefect);
+                    }
+                }
+            }
+        }
+
         public async Task<GeneralInsightsDto> GetGeneralInsightsAsync(string duration,int productId, int stageId, int type)
         {
             if (duration.Equals("Weekly"))
@@ -107,8 +147,11 @@ namespace InspectionAI.Home
                     {
                         loss += stages.Where(x => x.Id == group.StageId && x.ProductId == group.ProductId).Select(y => y.Cost).ElementAt(0);
                     }
-                    defectData.Data[index] = loss;
-                    revenueLoss.All[index] += loss;
+                    if (index != -1)
+                    {
+                        defectData.Data[index] = loss;
+                        revenueLoss.All[index] += loss;
+                    }
                 });
             }
             return revenueLoss;
@@ -146,8 +189,11 @@ namespace InspectionAI.Home
                     {
                         loss += stages.Where(x => x.Id == group.StageId && x.ProductId == group.ProductId).Select(y => y.Cost).ElementAt(0);
                     }
-                    defectData.Data[index] = loss;
-                    revenueLoss.All[index] += loss;
+                    if (index != -1)
+                    {
+                        defectData.Data[index] = loss;
+                        revenueLoss.All[index] += loss;
+                    }
                 });
             }
             return revenueLoss;
@@ -173,11 +219,15 @@ namespace InspectionAI.Home
             insightsDto.Defects = new(new int[products.Count()]);
             foreach (var good in goods)
             {
-                insightsDto.Good[insightsDto.Ids.FindIndex(x => x == good.Key)] = good.Count();
+                int index = insightsDto.Ids.FindIndex(x => x == good.Key);
+                if (index != -1)
+                    insightsDto.Good[index] = good.Count();
             }
             foreach (var defect in defectives)
             {
-                insightsDto.Defects[insightsDto.Ids.FindIndex(x => x == defect.Key)] = defect.Count();
+                int index = insightsDto.Ids.FindIndex(x => x == defect.Key);
+                if (index != -1)
+                    insightsDto.Defects[index] = defect.Count();
             }
             return insightsDto;
         }
@@ -199,7 +249,9 @@ namespace InspectionAI.Home
             defectiveRatio.Count = new(new int[defectiveRatio.Names.Count]);
             foreach (var defect in defectives)
             {
-                defectiveRatio.Count[ids.FindIndex(x => x == defect.Key)] = defect.Count();
+                int index = ids.FindIndex(x => x == defect.Key);
+                if (index != -1)
+                    defectiveRatio.Count[index] = defect.Count();
             }
             return defectiveRatio;
         }
@@ -239,7 +291,9 @@ namespace InspectionAI.Home
 
             foreach (var defect in defectives)
             {
-                defectTrend.All[defectTrend.Labels.FindIndex(x => x.Date == defect.Key)] = defect.Count();
+                int index = defectTrend.Labels.FindIndex(x => x.Date == defect.Key);
+                if (index != -1)
+                    defectTrend.All[index] = defect.Count();
             }
             defectTrend.Data = new(new ProductDefectTrendDataDto[products.Count]);
             for (int i = 0; i < products.Count; i++)
@@ -263,7 +317,8 @@ namespace InspectionAI.Home
                 data.ForEach(x =>
                 {
                     int index = defectTrend.Labels.FindIndex(y => y.Date == x.date);
-                    defectData.Data[index] = x.count;
+                    if (index != -1)
+                        defectData.Data[index] = x.count;
                 });
             }
             return defectTrend;
@@ -282,7 +337,9 @@ namespace InspectionAI.Home
 
             foreach (var defect in defectives)
             {
-                defectTrend.All[defectTrend.Labels.FindIndex(x => x.Date == defect.ElementAt(0).DetectionTime.Date)] = defect.Count();
+                int index = defectTrend.Labels.FindIndex(x => x.Date == defect.ElementAt(0).DetectionTime.Date);
+                if (index != -1)
+                    defectTrend.All[index] = defect.Count();
             }
             defectTrend.Data = new(new ProductDefectTrendDataDto[products.Count]);
             for (int i = 0; i < products.Count; i++)
@@ -301,7 +358,8 @@ namespace InspectionAI.Home
                 data.ForEach(x =>
                 {
                     int index = defectTrend.Labels.FindIndex(y => y.Date == x.ElementAt(0).DetectionTime.Date);
-                    defectData.Data[index] = x.Count();
+                    if (index != -1)
+                        defectData.Data[index] = x.Count();
                 });
             }
             return defectTrend;
@@ -411,7 +469,9 @@ namespace InspectionAI.Home
                 {
                     defectsCount += d.DefectsCount;
                 }
-                assemblyDefects.AssemblyDefectsCount[assemblyDefects.AssemblyId.FindIndex(y => y == group.Key)] = defectsCount;
+                int index = assemblyDefects.AssemblyId.FindIndex(y => y == group.Key);
+                if (index != -1)
+                    assemblyDefects.AssemblyDefectsCount[index] = defectsCount;
             }
             return assemblyDefects;
         }
@@ -432,7 +492,9 @@ namespace InspectionAI.Home
                 {
                     defectsCount += d.DefectsCount;
                 }
-                assemblyDefects.AssemblyDefectsCount[assemblyDefects.AssemblyId.FindIndex(y => y == group.Key)] = defectsCount;
+                int index = assemblyDefects.AssemblyId.FindIndex(y => y == group.Key);
+                if (index != -1)
+                    assemblyDefects.AssemblyDefectsCount[index] = defectsCount;
             }
             return assemblyDefects;
         }
@@ -453,7 +515,9 @@ namespace InspectionAI.Home
                 {
                     defectsCount += d.DefectsCount;
                 }
-                assemblyDefects.AssemblyDefectsCount[assemblyDefects.AssemblyId.FindIndex(y => y == group.Key)] = defectsCount;
+                int index = assemblyDefects.AssemblyId.FindIndex(y => y == group.Key);
+                if (index != -1)
+                    assemblyDefects.AssemblyDefectsCount[index] = defectsCount;
             }
             return assemblyDefects;
         }
@@ -470,7 +534,9 @@ namespace InspectionAI.Home
             revenueLoss.All = new(new double[revenueLoss.Labels.Count]);
             foreach (var group in detectionList)
             {
-                revenueLoss.All[revenueLoss.Labels.FindIndex(x => x.Date == group.Key)] = group.Count() * stage.Cost;
+                int index = revenueLoss.Labels.FindIndex(x => x.Date == group.Key);
+                if (index != -1)
+                    revenueLoss.All[index] = group.Count() * stage.Cost;
             }
 
             var assemblyLines = await _assemblyLineRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId);
@@ -491,7 +557,8 @@ namespace InspectionAI.Home
                 data.ForEach(x =>
                 {
                     int index = revenueLoss.Labels.FindIndex(y => y.Date == x.Key);
-                    revenueLossData.Data[index] = x.Count() * stage.Cost;
+                    if (index != -1)
+                        revenueLossData.Data[index] = x.Count() * stage.Cost;
                 });
             }
             return revenueLoss;
@@ -509,7 +576,9 @@ namespace InspectionAI.Home
             revenueLoss.All = new(new double[revenueLoss.Labels.Count]);
             foreach (var group in detectionList)
             {
-                revenueLoss.All[revenueLoss.Labels.FindIndex(x => x.Date == group.Key)] = group.Count() * stage.Cost;
+                int index = revenueLoss.Labels.FindIndex(x => x.Date == group.Key);
+                if (index != -1)
+                    revenueLoss.All[index] = group.Count() * stage.Cost;
             }
 
             var assemblyLines = await _assemblyLineRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId);
@@ -530,7 +599,8 @@ namespace InspectionAI.Home
                 data.ForEach(x =>
                 {
                     int index = revenueLoss.Labels.FindIndex(y => y.Date == x.Key);
-                    revenueLossData.Data[index] = x.Count() * stage.Cost;
+                    if (index != -1)
+                        revenueLossData.Data[index] = x.Count() * stage.Cost;
                 });
             }
             return revenueLoss;
@@ -540,16 +610,18 @@ namespace InspectionAI.Home
         {
             RevenueLossDto revenueLoss = new();
             var detections = await _assemblyDetectionRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId && x.DefectsCount > 0 && x.DetectionTime >= DateTime.Now.Date.AddMonths(-11));
-            var detectionList = detections.GroupBy(x => x.DetectionTime).ToList();
+            var detectionList = detections.GroupBy(x => x.DetectionTime.Month).ToList();
 
             var stage = await _stageRepo.GetAsync(stageId);
 
-            revenueLoss.Labels = detectionList.Select(x => x.Key).ToList();
+            revenueLoss.Labels = detectionList.Select(x => x.ElementAt(0).DetectionTime.Date).ToList();
             revenueLoss.All = new(new double[revenueLoss.Labels.Count]);
 
             foreach (var group in detectionList)
             {
-                revenueLoss.All[revenueLoss.Labels.FindIndex(x => x == group.Key)] = group.Count() * stage.Cost;
+                int index = revenueLoss.Labels.FindIndex(x => x == group.ElementAt(0).DetectionTime.Date);
+                if (index != -1)
+                    revenueLoss.All[index] = group.Count() * stage.Cost;
             }
 
             var assemblyLines = await _assemblyLineRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId);
@@ -565,12 +637,13 @@ namespace InspectionAI.Home
             foreach (var revenueLossData in revenueLoss.Data)
             {
                 var data = detections.Where(x => x.AssemblyLineId == revenueLossData.Id)
-                    .GroupBy(x => x.DetectionTime).ToList();
+                    .GroupBy(x => x.DetectionTime.Month).ToList();
 
                 data.ForEach(x =>
                 {
-                    int index = revenueLoss.Labels.FindIndex(y => y == x.Key);
-                    revenueLossData.Data[index] = x.Count() * stage.Cost;
+                    int index = revenueLoss.Labels.FindIndex(y => y == x.ElementAt(0).DetectionTime.Date);
+                    if (index != -1)
+                        revenueLossData.Data[index] = x.Count() * stage.Cost;
                 });
             }
             return revenueLoss;
@@ -596,7 +669,9 @@ namespace InspectionAI.Home
                 {
                     count += d.DefectsCount;
                 }
-                defectTrend.All[defectTrend.Labels.FindIndex(x => x.Date == defect.Key)] = count;
+                int index = defectTrend.Labels.FindIndex(x => x.Date == defect.Key);
+                if (index != -1)
+                    defectTrend.All[index] = count;
             }
 
             if (type == (byte)TypeEnum.STAGE)
@@ -645,7 +720,8 @@ namespace InspectionAI.Home
                 data.ForEach(x =>
                 {
                     int index = defectTrend.Labels.FindIndex(y => y.Date == x.date);
-                    defectData.Data[index] = x.count;
+                    if (index != -1)
+                        defectData.Data[index] = x.count;
                 });
             }
             return defectTrend;
@@ -671,7 +747,9 @@ namespace InspectionAI.Home
                 {
                     count += d.DefectsCount;
                 }
-                defectTrend.All[defectTrend.Labels.FindIndex(x => x.Date == defect.Key)] = count;
+                int index = defectTrend.Labels.FindIndex(x => x.Date == defect.Key);
+                if (index != -1)
+                    defectTrend.All[index] = count;
             }
 
             if (type == (byte)TypeEnum.STAGE)
@@ -720,7 +798,8 @@ namespace InspectionAI.Home
                 data.ForEach(x =>
                 {
                     int index = defectTrend.Labels.FindIndex(y => y.Date == x.date);
-                    defectData.Data[index] = x.count;
+                    if (index != -1)
+                        defectData.Data[index] = x.count;
                 });
             }
             return defectTrend;
@@ -746,7 +825,9 @@ namespace InspectionAI.Home
                 {
                     count += d.DefectsCount;
                 }
-                defectTrend.All[defectTrend.Labels.FindIndex(x => x == defect.ElementAt(0).DetectionTime.Date)] = count;
+                int index = defectTrend.Labels.FindIndex(x => x == defect.ElementAt(0).DetectionTime.Date);
+                if (index != -1)
+                    defectTrend.All[index] = count;
             }
 
             if (type == (byte)TypeEnum.STAGE)
@@ -790,7 +871,7 @@ namespace InspectionAI.Home
                 data.ForEach(x =>
                 {
                     int index = defectTrend.Labels.FindIndex(y => y.Date == x.ElementAt(0).DetectionTime.Date);
-                    if (index >= 0)
+                    if (index != -1)
                         defectData.Data[index] = x.Count();
                 });
             }
@@ -827,7 +908,9 @@ namespace InspectionAI.Home
             });
             foreach(var good in goodList)
             {
-                generalInsightsDto.Good[generalInsightsDto.Labels.FindIndex(x => x.Equals(good.date))] = good.count;
+                int index = generalInsightsDto.Labels.FindIndex(x => x.Equals(good.date));
+                if (index != -1)
+                    generalInsightsDto.Good[index] = good.count;
             }
 
             var defectList = detections.Where(x => x.DefectsCount > 0).GroupBy(x => x.DetectionTime.Date).Select(c => new
@@ -838,7 +921,8 @@ namespace InspectionAI.Home
             foreach (var defect in defectList)
             {
                 int index = generalInsightsDto.Labels.FindIndex(x => x.Equals(defect.date));
-                generalInsightsDto.Defects[index] = defect.count;
+                if (index != -1)
+                    generalInsightsDto.Defects[index] = defect.count;
             }
 
             return generalInsightsDto;
@@ -874,7 +958,9 @@ namespace InspectionAI.Home
             });
             foreach (var good in goodList)
             {
-                generalInsightsDto.Good[generalInsightsDto.Labels.FindIndex(x => x.Equals(good.date))] = good.count;
+                int index = generalInsightsDto.Labels.FindIndex(x => x.Equals(good.date));
+                if (index != -1)
+                    generalInsightsDto.Good[index] = good.count;
             }
 
             var defectList = detections.Where(x => x.DefectsCount > 0).GroupBy(x => x.DetectionTime.Date).Select(c => new
@@ -885,7 +971,8 @@ namespace InspectionAI.Home
             foreach (var defect in defectList)
             {
                 int index = generalInsightsDto.Labels.FindIndex(x => x.Equals(defect.date));
-                generalInsightsDto.Defects[index] = defect.count;
+                if (index != -1)
+                    generalInsightsDto.Defects[index] = defect.count;
             }
 
             return generalInsightsDto;
@@ -913,14 +1000,17 @@ namespace InspectionAI.Home
             var goodList = detections.Where(x => x.DefectsCount == 0).GroupBy(x => x.DetectionTime.Month);
             foreach (var good in goodList)
             {
-                generalInsightsDto.Good[generalInsightsDto.Labels.FindIndex(x => x.Equals(good.ElementAt(0).DetectionTime.Date))] = good.Count();
+                int index = generalInsightsDto.Labels.FindIndex(x => x.Equals(good.ElementAt(0).DetectionTime.Date));
+                if (index != -1)
+                    generalInsightsDto.Good[index] = good.Count();
             }
 
             var defectList = detections.Where(x => x.DefectsCount > 0).GroupBy(x => x.DetectionTime.Month);
             foreach (var defect in defectList)
             {
                 int index = generalInsightsDto.Labels.FindIndex(x => x.Equals(defect.ElementAt(0).DetectionTime.Date));
-                generalInsightsDto.Defects[index] = defect.Count();
+                if (index != -1)
+                    generalInsightsDto.Defects[index] = defect.Count();
             }
 
             return generalInsightsDto;
