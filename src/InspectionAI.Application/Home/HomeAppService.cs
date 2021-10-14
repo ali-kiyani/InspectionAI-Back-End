@@ -357,7 +357,7 @@ namespace InspectionAI.Home
 
                 data.ForEach(x =>
                 {
-                    int index = defectTrend.Labels.FindIndex(y => y.Date == x.ElementAt(0).DetectionTime.Date);
+                    int index = defectTrend.Labels.FindIndex(y => y.Month == x.ElementAt(0).DetectionTime.Month);
                     if (index != -1)
                         defectData.Data[index] = x.Count();
                 });
@@ -641,7 +641,7 @@ namespace InspectionAI.Home
 
                 data.ForEach(x =>
                 {
-                    int index = revenueLoss.Labels.FindIndex(y => y == x.ElementAt(0).DetectionTime.Date);
+                    int index = revenueLoss.Labels.FindIndex(y => y.Month == x.ElementAt(0).DetectionTime.Month);
                     if (index != -1)
                         revenueLossData.Data[index] = x.Count() * stage.Cost;
                 });
@@ -868,12 +868,12 @@ namespace InspectionAI.Home
                 var data = detectionDefects.Where(x => x.DefectId == defectData.DefectId)
                     .GroupBy(x => x.DetectionTime.Month).ToList();
 
-                data.ForEach(x =>
+                foreach(var defectGroup in data)
                 {
-                    int index = defectTrend.Labels.FindIndex(y => y.Date == x.ElementAt(0).DetectionTime.Date);
+                    int index = defectTrend.Labels.FindIndex(y => y.Month == defectGroup.ElementAt(0).DetectionTime.Month);
                     if (index != -1)
-                        defectData.Data[index] = x.Count();
-                });
+                        defectData.Data[index] = defectGroup.Count();
+                }
             }
             return defectTrend;
         }
@@ -1000,7 +1000,7 @@ namespace InspectionAI.Home
             var goodList = detections.Where(x => x.DefectsCount == 0).GroupBy(x => x.DetectionTime.Month);
             foreach (var good in goodList)
             {
-                int index = generalInsightsDto.Labels.FindIndex(x => x.Equals(good.ElementAt(0).DetectionTime.Date));
+                int index = generalInsightsDto.Labels.FindIndex(x => x.Month == good.ElementAt(0).DetectionTime.Month);
                 if (index != -1)
                     generalInsightsDto.Good[index] = good.Count();
             }
@@ -1008,7 +1008,7 @@ namespace InspectionAI.Home
             var defectList = detections.Where(x => x.DefectsCount > 0).GroupBy(x => x.DetectionTime.Month);
             foreach (var defect in defectList)
             {
-                int index = generalInsightsDto.Labels.FindIndex(x => x.Equals(defect.ElementAt(0).DetectionTime.Date));
+                int index = generalInsightsDto.Labels.FindIndex(x => x.Month == defect.ElementAt(0).DetectionTime.Month);
                 if (index != -1)
                     generalInsightsDto.Defects[index] = defect.Count();
             }
