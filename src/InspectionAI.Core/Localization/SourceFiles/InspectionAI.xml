@@ -117,23 +117,5 @@
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="UsersActivation">Users activation</text>
-    <text name="TopDefects">Top Defects</text>
-    <text name="DEFECTS">DEFECTS</text>
-    <text name="GOOD">GOOD</text>
-    <text name="SCANS">SCANS</text>
-    <text name="Apply">Apply</text>
-    <text name="Detailed">Detailed</text>
-    <text name="Defects">Defects</text>
-    <text name="DefectsRatio">Defects Ratio</text>
-    <text name="ProductDefectTrend">Products Defect Trend</text>
-    <text name="OverView">Over View</text>
-    <text name="RevenueLost">Revenue Lost</text>
-    <text name="AssemblyDefects">Assembly Defects</text>
-    <text name="DefectsTrend">Defects Trend</text>
-    <text name="SelectProduct">Select Product</text>
-    <text name="SelectDuration">Select Duration</text>
-    <text name="ProductNotSelected">Product Not Selected</text>
-    <text name="ProductDefectRatio">Product-Defect Ratio</text>
-    <text name="DefectiveProducts">Defective Products</text>
   </texts>
 </localizationDictionary>

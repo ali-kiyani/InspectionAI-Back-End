@@ -71,7 +71,7 @@ namespace InspectionAI.Web.Host.Startup
             }
 
             // Set auth token from cookie
-            context.Token = SimpleStringCipher.Instance.Decrypt(qsAuthToken, InspectionAIConsts.DefaultPassPhrase);
+            context.Token = SimpleStringCipher.Instance.Decrypt(qsAuthToken);
             return Task.CompletedTask;
         }
     }

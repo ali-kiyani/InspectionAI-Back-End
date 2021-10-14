@@ -230,7 +230,7 @@ namespace InspectionAI.Controllers
 
         private string GetEncryptedAccessToken(string accessToken)
         {
-            return SimpleStringCipher.Instance.Encrypt(accessToken, InspectionAIConsts.DefaultPassPhrase);
+            return SimpleStringCipher.Instance.Encrypt(accessToken);
         }
     }
 }
