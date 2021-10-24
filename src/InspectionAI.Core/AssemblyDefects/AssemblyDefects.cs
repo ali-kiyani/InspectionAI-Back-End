@@ -1,13 +1,11 @@
 ﻿using Abp.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace InspectionAI.AssemblyDefects
 {
+    [Index(nameof(DetectionTime), nameof(Confidence))]
     [Table("AssemblyDefects")]
     public class AssemblyDefects : Entity<int>
     {
@@ -20,7 +18,6 @@ namespace InspectionAI.AssemblyDefects
         [ForeignKey("DefectId")]
         public Defects.Defects Defect { get; set; }
         public float Confidence { get; set; }
-        public string ImageUrl { get; set; }
         public int StageId { get; set; }
 
         [ForeignKey("StageId")]

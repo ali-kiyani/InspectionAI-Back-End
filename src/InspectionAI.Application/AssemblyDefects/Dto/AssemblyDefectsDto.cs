@@ -12,8 +12,10 @@ namespace InspectionAI.AssemblyDefects.Dto
     public class AssemblyDefectsDto : EntityDto<int>
     {
         public int AssemblyDetectionId { get; set; }
+        public int StageId { get; set; }
         public int DefectId { get; set; }
         public float Confidence { get; set; }
-        public string ImageUrl { get; set; }
+        public DateTime DetectionTime { get; set; }
+
     }
 }

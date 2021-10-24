@@ -21,15 +21,17 @@ namespace InspectionAI.AssemblyDetection
             this._assemblyDefectsRepo = assemblyDefectsRepo;
         }
 
-        public async Task AddNewDetectionAsync(CreateAssemblyDetectionDto detectionDto)
+        public async Task AddNewDetectionAsync(AssemblyDetectionDto detectionDto)
         {
-            Task<int> waitId = _assemblyDetectionRepo.InsertAndGetIdAsync(ObjectMapper.Map<AssemblyDetection>(detectionDto));
-            List<AssemblyDefects.AssemblyDefects> defects = ObjectMapper.Map<List<AssemblyDefects.AssemblyDefects>>(detectionDto.AssemblyDefects);
-            int id = await waitId;
-            defects.ForEach(async x => {
-                x.AssemblyDetectionId = id;
-                await _assemblyDefectsRepo.InsertAsync(ObjectMapper.Map<AssemblyDefects.AssemblyDefects>(x));
-                });
+            await _assemblyDetectionRepo.InsertAsync(ObjectMapper.Map<AssemblyDetection>(detectionDto));
+        }
+
+        public void AddBulkDetections(List<AssemblyDetectionDto> detectionsDto)
+        {
+            detectionsDto.ForEach(async x =>
+            {
+                await _assemblyDetectionRepo.InsertAsync(ObjectMapper.Map<AssemblyDetection>(x));
+            });
         }
     }
 }

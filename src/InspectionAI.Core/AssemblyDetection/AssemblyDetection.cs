@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace InspectionAI.AssemblyDetection
 {
+    [Index(nameof(DetectionTime), nameof(DefectsCount))]
     [Table("AssemblyDetection")]
     public class AssemblyDetection : Entity<int>
     {
@@ -22,6 +24,8 @@ namespace InspectionAI.AssemblyDetection
 
         [ForeignKey("StageId")]
         public Stage.Stage Stage { get; set; }
+        public string ImageUrl { get; set; }
+
         public DateTime DetectionTime { get; set; }
         public int DefectsCount { get; set; }
         public virtual ICollection<AssemblyDefects.AssemblyDefects> AssemblyDefects { get; set; }

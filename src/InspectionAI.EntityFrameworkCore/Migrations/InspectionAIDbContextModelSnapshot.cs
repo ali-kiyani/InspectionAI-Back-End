@@ -1349,9 +1349,6 @@ namespace InspectionAI.Migrations
                     b.Property<DateTime>("DetectionTime")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("ImageUrl")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("StageId")
                         .HasColumnType("int");
 
@@ -1362,6 +1359,8 @@ namespace InspectionAI.Migrations
                     b.HasIndex("DefectId");
 
                     b.HasIndex("StageId");
+
+                    b.HasIndex("DetectionTime", "Confidence");
 
                     b.ToTable("AssemblyDefects");
                 });
@@ -1382,6 +1381,9 @@ namespace InspectionAI.Migrations
                     b.Property<DateTime>("DetectionTime")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -1395,6 +1397,8 @@ namespace InspectionAI.Migrations
                     b.HasIndex("ProductId");
 
                     b.HasIndex("StageId");
+
+                    b.HasIndex("DetectionTime", "DefectsCount");
 
                     b.ToTable("AssemblyDetection");
                 });
@@ -1636,9 +1640,11 @@ namespace InspectionAI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name");
 
                     b.ToTable("Defects");
                 });
@@ -1714,9 +1720,11 @@ namespace InspectionAI.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name");
 
                     b.ToTable("Product");
                 });
@@ -1732,7 +1740,7 @@ namespace InspectionAI.Migrations
                         .HasColumnType("real");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -1740,6 +1748,8 @@ namespace InspectionAI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("Name", "Cost");
 
                     b.ToTable("Stage");
                 });

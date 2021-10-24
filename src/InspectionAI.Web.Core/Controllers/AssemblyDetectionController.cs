@@ -19,9 +19,16 @@ namespace InspectionAI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddAssemblyDetection([FromBody] CreateAssemblyDetectionDto assemblyDetectionDto)
+        public async Task<ActionResult> AddAssemblyDetection([FromBody] AssemblyDetectionDto assemblyDetectionDto)
         {
             await _appService.AddNewDetectionAsync(assemblyDetectionDto);
+            return Ok();
+        }
+
+        [HttpPost]
+        public ActionResult AddBulkDetections([FromBody] List<AssemblyDetectionDto> assemblyDetectionsDto)
+        {
+            _appService.AddBulkDetections(assemblyDetectionsDto);
             return Ok();
         }
     }

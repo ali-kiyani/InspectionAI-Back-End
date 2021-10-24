@@ -1,4 +1,5 @@
 ﻿using Abp.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -8,6 +9,8 @@ using System.Threading.Tasks;
 
 namespace InspectionAI.Stage
 {
+    [Index(nameof(Name), nameof(Cost))]
+
     [Table("Stage")]
     public class Stage : Entity<int>
     {
