@@ -34,6 +34,35 @@ namespace InspectionAI.OverviewDashboard
             _assemblyDefectsRepo = assemblyDefectsRepo;
         }
 
+        public void FillGoodData(int randLimit, DateTime from, DateTime to)
+        {
+            var assemData = _assemblyLineRepo.GetAllList();
+            var stageDefects = _stageDefectsRepo.GetAllList();
+            for (DateTime d = from; d <= to; d = d.AddDays(1))
+            {
+                Random rand = new Random();
+                for (int i = 0; i < rand.Next(randLimit); i++)
+                {
+                    Random rnd = new Random();
+                    var assem = assemData.ElementAt(rnd.Next(assemData.Count));
+                    var productId = assem.ProductId;
+                    var stageId = assem.StageId;
+                    var assemId = assem.Id;
+                    var defectsIds = stageDefects.Where(x => x.ProductId == productId && x.StageId == stageId).Select(x => x.DefectId).ToList();
+                    var dCount = 0;
+                    AssemblyDetection.AssemblyDetection detection = new()
+                    {
+                        StageId = stageId,
+                        ProductId = productId,
+                        AssemblyLineId = assemId,
+                        DetectionTime = d,
+                        DefectsCount = dCount
+                    };
+                    var detectionId = _assemblyDetectionRepo.Insert(detection);
+                }
+            }
+        }
+
         public void FillData(int step, int perDayCount, DateTime from, DateTime to)
         {
             var assemData =  _assemblyLineRepo.GetAllList();
