@@ -199,7 +199,7 @@ namespace InspectionAI.DetailedDashboard
         {
             DetailedRevenueLossDto revenueLoss = new();
             var detections = await _assemblyDetectionRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId && x.DefectsCount > 0 && x.DetectionTime.Date >= DateTime.Now.Date.AddDays(-6));
-            var detectionList = detections.OrderByDescending(x => x.DetectionTime.Date).GroupBy(x => x.DetectionTime.Date).ToList();
+            var detectionList = detections.OrderBy(x => x.DetectionTime.Date).GroupBy(x => x.DetectionTime.Date).ToList();
 
             var stage = await _stageRepo.GetAsync(stageId);
 
@@ -241,7 +241,7 @@ namespace InspectionAI.DetailedDashboard
         {
             DetailedRevenueLossDto revenueLoss = new();
             var detections = await _assemblyDetectionRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId && x.DefectsCount > 0 && x.DetectionTime.Date >= DateTime.Now.Date.AddDays(-29));
-            var detectionList = detections.OrderByDescending(x => x.DetectionTime.Date).GroupBy(x => x.DetectionTime.Date).ToList();
+            var detectionList = detections.OrderBy(x => x.DetectionTime.Date).GroupBy(x => x.DetectionTime.Date).ToList();
 
             var stage = await _stageRepo.GetAsync(stageId);
 
@@ -283,7 +283,7 @@ namespace InspectionAI.DetailedDashboard
         {
             DetailedRevenueLossDto revenueLoss = new();
             var detections = await _assemblyDetectionRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId && x.DefectsCount > 0 && x.DetectionTime >= DateTime.Now.Date.AddMonths(-11));
-            var detectionList = detections.OrderByDescending(x => x.DetectionTime.Date).GroupBy(x => x.DetectionTime.Month).ToList();
+            var detectionList = detections.OrderBy(x => x.DetectionTime.Date).GroupBy(x => x.DetectionTime.Month).ToList();
 
             var stage = await _stageRepo.GetAsync(stageId);
 
@@ -326,7 +326,7 @@ namespace InspectionAI.DetailedDashboard
         {
             DetailedDefectTrendDto defectTrend = new();
             List<AssemblyDetection.AssemblyDetection> detections = await _assemblyDetectionRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId && x.DefectsCount > 0 && x.DetectionTime.Date >= DateTime.Now.Date.AddDays(-6));
-             detections = detections.OrderByDescending(x => x.DetectionTime.Date).ToList();
+             detections = detections.OrderBy(x => x.DetectionTime.Date).ToList();
             var detectionList = detections.GroupBy(x => x.DetectionTime.Date).ToList();
 
             defectTrend.Labels = detectionList.Select(x => x.Key.Date).ToList();
@@ -357,7 +357,7 @@ namespace InspectionAI.DetailedDashboard
             List<AssemblyDefects.AssemblyDefects> detectionDefects = new();
 
                 detectionDefects = await _assemblyDefectsRepo.GetAllListAsync(x => x.StageId == stageId && x.DetectionTime.Date >= DateTime.Now.Date.AddDays(-6));
-            detectionDefects = detectionDefects.OrderByDescending(x => x.DetectionTime.Date).ToList();
+            detectionDefects = detectionDefects.OrderBy(x => x.DetectionTime.Date).ToList();
             foreach (var defectData in defectTrend.Data)
             {
                 var data = detectionDefects.Where(x => x.DefectId == defectData.DefectId)
@@ -382,7 +382,7 @@ namespace InspectionAI.DetailedDashboard
         {
             DetailedDefectTrendDto defectTrend = new();
             List<AssemblyDetection.AssemblyDetection> detections = await _assemblyDetectionRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId && x.DefectsCount > 0 && x.DetectionTime.Date >= DateTime.Now.Date.AddDays(-29));
-            detections = detections.OrderByDescending(x => x.DetectionTime.Date).ToList();
+            detections = detections.OrderBy(x => x.DetectionTime.Date).ToList();
             var detectionList = detections.GroupBy(x => x.DetectionTime.Date).ToList();
 
             defectTrend.Labels = detectionList.Select(x => x.Key.Date).ToList();
@@ -412,7 +412,7 @@ namespace InspectionAI.DetailedDashboard
             List<AssemblyDefects.AssemblyDefects> detectionDefects = new();
 
                 detectionDefects = await _assemblyDefectsRepo.GetAllListAsync(x => x.StageId == stageId && x.DetectionTime.Date >= DateTime.Now.Date.AddDays(-29));
-            detectionDefects = detectionDefects.OrderByDescending(x => x.DetectionTime.Date).ToList();
+            detectionDefects = detectionDefects.OrderBy(x => x.DetectionTime.Date).ToList();
             foreach (var defectData in defectTrend.Data)
             {
                 var data = detectionDefects.Where(x => x.DefectId == defectData.DefectId)
@@ -438,7 +438,7 @@ namespace InspectionAI.DetailedDashboard
             DetailedDefectTrendDto defectTrend = new();
             List<AssemblyDetection.AssemblyDetection> detections = new();
                 detections = await _assemblyDetectionRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId && x.DefectsCount > 0 && x.DetectionTime.Date >= DateTime.Now.Date.AddMonths(-11));
-            detections = detections.OrderByDescending(x => x.DetectionTime.Date).ToList();
+            detections = detections.OrderBy(x => x.DetectionTime.Date).ToList();
             var detectionList = detections.GroupBy(x => x.DetectionTime.Month).ToList();
 
             defectTrend.Labels = detectionList.Select(x => x.ElementAt(0).DetectionTime.Date).ToList();
@@ -468,7 +468,7 @@ namespace InspectionAI.DetailedDashboard
             List<AssemblyDefects.AssemblyDefects> detectionDefects = new();
 
                 detectionDefects = await _assemblyDefectsRepo.GetAllListAsync(x => x.StageId == stageId && x.DetectionTime.Date >= DateTime.Now.Date.AddMonths(-11));
-             detectionDefects = detectionDefects.OrderByDescending(x => x.DetectionTime.Date).ToList();
+             detectionDefects = detectionDefects.OrderBy(x => x.DetectionTime.Date).ToList();
             foreach (var defectData in defectTrend.Data)
             {
                 var data = detectionDefects.Where(x => x.DefectId == defectData.DefectId)
@@ -489,7 +489,7 @@ namespace InspectionAI.DetailedDashboard
             DetailedGeneralInsightsDto generalInsightsDto = new();
 
             List<AssemblyDetection.AssemblyDetection> detections = await _assemblyDetectionRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId && x.DetectionTime.Date >= DateTime.Now.Date.AddDays(-6));
-            detections = detections.OrderByDescending(x => x.DetectionTime.Date).ToList();
+            detections = detections.OrderBy(x => x.DetectionTime.Date).ToList();
             generalInsightsDto.TotalDetections = detections.Count;
             generalInsightsDto.TotalGood = detections.Where(x => x.DefectsCount == 0).Count();
             generalInsightsDto.TotalDefects = detections.Where(x => x.DefectsCount > 0).Count();
@@ -536,7 +536,7 @@ namespace InspectionAI.DetailedDashboard
         {
             DetailedGeneralInsightsDto generalInsightsDto = new();
             List<AssemblyDetection.AssemblyDetection> detections = await _assemblyDetectionRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId && x.DetectionTime.Date >= DateTime.Now.Date.AddDays(-29));
-            detections = detections.OrderByDescending(x => x.DetectionTime.Date).ToList();
+            detections = detections.OrderBy(x => x.DetectionTime.Date).ToList();
             generalInsightsDto.TotalDetections = detections.Count;
             generalInsightsDto.TotalGood = detections.Where(x => x.DefectsCount == 0).Count();
             generalInsightsDto.TotalDefects = detections.Where(x => x.DefectsCount > 0).Count();
@@ -584,7 +584,7 @@ namespace InspectionAI.DetailedDashboard
             DetailedGeneralInsightsDto generalInsightsDto = new();
 
             List<AssemblyDetection.AssemblyDetection> detections = await _assemblyDetectionRepo.GetAllListAsync(x => x.ProductId == productId && x.StageId == stageId && x.DetectionTime.Date >= DateTime.Now.Date.AddMonths(-11));
-            detections = detections.OrderByDescending(x => x.DetectionTime.Date).ToList();
+            detections = detections.OrderBy(x => x.DetectionTime.Date).ToList();
             generalInsightsDto.TotalDetections = detections.Count;
             generalInsightsDto.TotalGood = detections.Where(x => x.DefectsCount == 0).Count();
             generalInsightsDto.TotalDefects = detections.Where(x => x.DefectsCount > 0).Count();
