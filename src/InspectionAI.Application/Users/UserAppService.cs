@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Abp.Application.Services;
 using Abp.Application.Services.Dto;
 using Abp.Authorization;
+using Abp.Configuration;
 using Abp.Domain.Entities;
 using Abp.Domain.Repositories;
 using Abp.Extensions;
@@ -208,7 +209,6 @@ namespace InspectionAI.Users
                     Description = "Incorrect password."
                 }));
             }
-
             return true;
         }
 
@@ -245,6 +245,16 @@ namespace InspectionAI.Users
             }
 
             return true;
+        }
+        public async Task ChangeRefreshTimeSettings(ChangeRefreshTimeDto input)
+        {
+            if (_abpSession.UserId == null)
+            {
+                throw new UserFriendlyException("Please log in before attempting to reset password.");
+            }
+            await SettingManager.ChangeSettingForUserAsync(AbpSession.ToUserIdentifier(),
+            UserSettingsProvider.DefaultRefreshIntervalPhrase,
+            input.RefreshTime.ToString());
         }
     }
 }

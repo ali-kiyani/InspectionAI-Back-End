@@ -117,5 +117,10 @@
     <text name="ResetPasswordStepOneInfo">1. Enter your administrator password</text>
     <text name="ResetPasswordStepTwoInfo">2. Copy this random password so you can send it to the user</text>
     <text name="UsersActivation">Users activation</text>
+    <text name="RefreshInterval">Refresh Interval (mins)</text>
+    <text name="ChangeRefreshInterval">Change Refresh Interval</text>
+    <text name="RefreshIntervalUpdatedSuccessfully">Refresh Interval Updated Successfully</text>
+    <text name="RefreshIntervalNotUpdated">Unable to Update Refresh Interval</text>
+    <text name="UpdateInterval">Update Interval</text>
   </texts>
 </localizationDictionary>

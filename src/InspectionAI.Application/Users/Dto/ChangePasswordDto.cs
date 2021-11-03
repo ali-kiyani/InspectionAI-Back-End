@@ -9,5 +9,6 @@ namespace InspectionAI.Users.Dto
 
         [Required]
         public string NewPassword { get; set; }
+
     }
 }
