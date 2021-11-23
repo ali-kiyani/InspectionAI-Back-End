@@ -15,6 +15,7 @@ namespace InspectionAI.Product
     public class Product : Entity<int>
     {
         public string Name { get; set; }
+        public string ModelPath { get; set; }
 
         public virtual ICollection<Stage.Stage> Stages { get; set; }
     }

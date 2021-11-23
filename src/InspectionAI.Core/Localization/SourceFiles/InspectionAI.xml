@@ -122,5 +122,10 @@
     <text name="RefreshIntervalUpdatedSuccessfully">Refresh Interval Updated Successfully</text>
     <text name="RefreshIntervalNotUpdated">Unable to Update Refresh Interval</text>
     <text name="UpdateInterval">Update Interval</text>
+    <text name="DefectiveProducts">Defective Products</text>
+    <text name="SelectProduct">Select Product</text>
+    <text name="SelectStage">Select Stage</text>
+    <text name="SelectAssemblyLine">Select Line</text>
+    <text name="SelectDefect">Select Defect</text>
   </texts>
 </localizationDictionary>

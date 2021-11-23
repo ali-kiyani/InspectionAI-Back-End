@@ -9,5 +9,9 @@ namespace InspectionAI.AssemblyDetection.Dto
 {
     public class PagedAssemblyDetectionResutlRequestDto : PagedResultRequestDto
     {
+        public int? ProductId { get; set; }
+        public int? StageId { get; set; }
+        public int? AssemblyLineId { get; set; }
+        public List<int> DefectIds { get; set; }
     }
 }

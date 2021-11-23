@@ -1,4 +1,5 @@
 ﻿using Abp.Application.Services;
+using Abp.Application.Services.Dto;
 using InspectionAI.AssemblyDetection.Dto;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,6 @@ namespace InspectionAI.AssemblyDetection
     {
         public Task AddNewDetectionAsync(AssemblyDetectionDto detectionDto);
         public void AddBulkDetections(List<AssemblyDetectionDto> detectionsDto);
+        Task<PagedResultDto<DefectiveProductsResponse>> GetDefectiveProducts(PagedAssemblyDetectionResutlRequestDto request);
     }
 }

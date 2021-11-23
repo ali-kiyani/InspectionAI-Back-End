@@ -77,7 +77,7 @@ namespace InspectionAI.OverviewDashboard
                     var stageId = assem.StageId;
                     var assemId = assem.Id;
                     var defectsIds = stageDefects.Where(x => x.ProductId == productId && x.StageId == stageId).Select(x => x.DefectId).ToList();
-                    var dCount = rnd.Next(10) % 2;
+                    var dCount = rnd.Next(16) % 3;
                     AssemblyDetection.AssemblyDetection detection = new()
                     {
                         StageId = stageId,

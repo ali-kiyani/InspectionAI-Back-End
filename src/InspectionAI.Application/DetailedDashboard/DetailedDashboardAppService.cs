@@ -137,14 +137,9 @@ namespace InspectionAI.DetailedDashboard
             assemblyDefects.AssemblyDefectsCount = new(new int[assemblyDefects.AssemblyId.Count]);
             foreach (var group in defectList)
             {
-                var defectsCount = 0;
-                foreach (var d in group)
-                {
-                    defectsCount += d.DefectsCount;
-                }
                 int index = assemblyDefects.AssemblyId.FindIndex(y => y == group.Key);
                 if (index != -1)
-                    assemblyDefects.AssemblyDefectsCount[index] = defectsCount;
+                    assemblyDefects.AssemblyDefectsCount[index] = group.Count();
             }
             return assemblyDefects;
         }
@@ -160,14 +155,9 @@ namespace InspectionAI.DetailedDashboard
             assemblyDefects.AssemblyDefectsCount = new(new int[assemblyDefects.AssemblyId.Count]);
             foreach (var group in defectList)
             {
-                var defectsCount = 0;
-                foreach (var d in group)
-                {
-                    defectsCount += d.DefectsCount;
-                }
                 int index = assemblyDefects.AssemblyId.FindIndex(y => y == group.Key);
                 if (index != -1)
-                    assemblyDefects.AssemblyDefectsCount[index] = defectsCount;
+                    assemblyDefects.AssemblyDefectsCount[index] = group.Count();
             }
             return assemblyDefects;
         }
@@ -183,14 +173,9 @@ namespace InspectionAI.DetailedDashboard
             assemblyDefects.AssemblyDefectsCount = new(new int[assemblyDefects.AssemblyId.Count]);
             foreach (var group in defectList)
             {
-                var defectsCount = 0;
-                foreach (var d in group)
-                {
-                    defectsCount += d.DefectsCount;
-                }
                 int index = assemblyDefects.AssemblyId.FindIndex(y => y == group.Key);
                 if (index != -1)
-                    assemblyDefects.AssemblyDefectsCount[index] = defectsCount;
+                    assemblyDefects.AssemblyDefectsCount[index] = group.Count();
             }
             return assemblyDefects;
         }

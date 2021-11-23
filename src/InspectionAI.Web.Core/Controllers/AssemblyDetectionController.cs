@@ -1,4 +1,5 @@
-﻿using InspectionAI.AssemblyDetection;
+﻿using Abp.Application.Services.Dto;
+using InspectionAI.AssemblyDetection;
 using InspectionAI.AssemblyDetection.Dto;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace InspectionAI.Controllers
 {
+    [Route("api/[controller]/[action]")]
     public class AssemblyDetectionController : InspectionAIControllerBase
     {
         private readonly IAssemblyDetectionAppService _appService;
@@ -30,6 +32,12 @@ namespace InspectionAI.Controllers
         {
             _appService.AddBulkDetections(assemblyDetectionsDto);
             return Ok();
+        }
+
+        [HttpPost]
+        public async Task<PagedResultDto<DefectiveProductsResponse>> GetDefectiveProducts([FromBody] PagedAssemblyDetectionResutlRequestDto request)
+        {
+            return await _appService.GetDefectiveProducts(request);
         }
     }
 }

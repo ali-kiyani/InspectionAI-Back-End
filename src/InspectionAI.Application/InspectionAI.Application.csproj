@@ -13,5 +13,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\InspectionAI.Core\InspectionAI.Core.csproj" />
+    <ProjectReference Include="..\InspectionAI.EntityFrameworkCore\InspectionAI.EntityFrameworkCore.csproj" />
   </ItemGroup>
 </Project>

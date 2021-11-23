@@ -12,5 +12,6 @@ namespace InspectionAI.Product
     public interface IProductAppService : IApplicationService
     {
         Task<ListResultDto<ProductDto>> GetAllProducts();
+        Task<ProductHeirarchyDto> GetAllProductsHeirarchy();
     }
 }
